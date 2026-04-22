@@ -9,6 +9,7 @@ A minimal read-only `.xlsx` viewer for GNOME/Linux. Built so you can peek at an 
 - Read-only — the file is never written back
 - Supports `.xlsx` and `.xlsm`
 - Sheet tabs (one per worksheet), at the bottom like Excel
+
 - Formula bar at the top — shows the raw formula for the selected cell
 - Click/drag to select a cell or a range
 - Click a column or row header to select the whole column/row
@@ -23,20 +24,7 @@ A minimal read-only `.xlsx` viewer for GNOME/Linux. Built so you can peek at an 
 
 ## Installation
 
-### AppImage (easiest)
-
-Grab the `.AppImage` from the [latest release](https://github.com/yonie/quickcell/releases/latest), make it executable, and run it:
-
-```bash
-chmod +x QuickCell-*.AppImage
-./QuickCell-*.AppImage path/to/file.xlsx
-```
-
-No system packages or Python deps needed — everything is bundled.
-
-### Run from source
-
-If you'd rather run the script directly:
+### System packages
 
 ```bash
 # Fedora
@@ -47,7 +35,11 @@ sudo apt install python3-gi gir1.2-gtk-3.0 python3-cairo
 
 # Arch
 sudo pacman -S python-gobject gtk3 cairo
+```
 
+### Python deps
+
+```bash
 pip install openpyxl
 ```
 
