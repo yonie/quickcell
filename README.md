@@ -2,6 +2,8 @@
 
 A minimal read-only `.xlsx` viewer for GNOME/Linux. Built so you can peek at an Excel file someone sent you without firing up LibreOffice.
 
+![QuickCell Screenshot](screenshot.png)
+
 ## Features
 
 - Read-only — the file is never written back
