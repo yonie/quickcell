@@ -50,7 +50,7 @@ AppDir:
 
   runtime:
     env:
-      APPDIR_LIBRARY_PATH: '$APPDIR/usr/lib/x86_64-linux-gnu:$APPDIR/usr/lib/x86_64-linux-gnu/gtk-3.0'
+      APPDIR_LIBRARY_PATH: '$APPDIR/lib/x86_64-linux-gnu:$APPDIR/usr/lib/x86_64-linux-gnu:$APPDIR/usr/lib/x86_64-linux-gnu/gtk-3.0'
       GI_TYPELIB_PATH: '$APPDIR/usr/lib/x86_64-linux-gnu/girepository-1.0'
       PYTHONPATH: '$APPDIR/usr/lib/python3/dist-packages:$APPDIR/usr/lib/python3.10'
       GTK_PATH: '$APPDIR/usr/lib/x86_64-linux-gnu/gtk-3.0'
