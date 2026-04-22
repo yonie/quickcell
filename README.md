@@ -43,6 +43,33 @@ sudo pacman -S python-gobject gtk3 cairo
 pip install openpyxl
 ```
 
+### File manager integration (optional)
+
+To make QuickCell show up in the "Open With" menu for `.xlsx` / `.xlsm` files in Files (Nautilus), save the following to `~/.local/share/applications/quickcell.desktop`, replacing the two `/path/to/...` lines with wherever you cloned the repo:
+
+```ini
+[Desktop Entry]
+Name=QuickCell
+Comment=Quickly view .xlsx / .xlsm spreadsheets
+Exec=/path/to/quickcell.py %f
+Icon=/path/to/screenshot.png
+Terminal=false
+Type=Application
+Categories=Office;Spreadsheet;Viewer;
+MimeType=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;application/vnd.ms-excel.sheet.macroEnabled.12;
+Keywords=Excel;Spreadsheet;Viewer;
+StartupNotify=true
+```
+
+Make the script executable and refresh the desktop database:
+
+```bash
+chmod +x /path/to/quickcell.py
+update-desktop-database ~/.local/share/applications/
+```
+
+QuickCell will then appear under "Open With Other Application" for `.xlsx` and `.xlsm` files. This does **not** change the default app — LibreOffice keeps that unless you pick QuickCell via "Set as default".
+
 ## Usage
 
 ```bash
