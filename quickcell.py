@@ -236,8 +236,12 @@ class SheetView(Gtk.Grid):
         self.drawing_area.connect("key-press-event", self._on_key_press)
         self.drawing_area.connect("size-allocate", self._on_size_allocate)
 
-        self.hadj = Gtk.Adjustment(0, 0, 0, 20, 200, 0)
-        self.vadj = Gtk.Adjustment(0, 0, 0, 20, 200, 0)
+        self.hadj = Gtk.Adjustment()
+        self.hadj.set_step_increment(20)
+        self.hadj.set_page_increment(200)
+        self.vadj = Gtk.Adjustment()
+        self.vadj.set_step_increment(20)
+        self.vadj.set_page_increment(200)
         self.hadj.connect("value-changed", self._on_hadj)
         self.vadj.connect("value-changed", self._on_vadj)
         self.hscroll = Gtk.Scrollbar(
@@ -853,6 +857,7 @@ class QuickCellApp:
 
         self.notebook = Gtk.Notebook()
         self.notebook.set_scrollable(True)
+        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
         self.notebook.connect("switch-page", self._on_switch_page)
 
         self.status_cell = Gtk.Label(label="")
