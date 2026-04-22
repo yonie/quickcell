@@ -26,7 +26,7 @@ line-length = 88
 select = ["E", "F", "W", "I"]
 
 [tool.ruff.lint.per-file-ignores]
-"quickcell.py" = ["E402"]
+"quickcell.py" = ["E402", "E741"]
 
 [tool.setuptools]
 py-modules = ["quickcell"]

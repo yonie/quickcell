@@ -13,9 +13,8 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 gi.require_version("Pango", "1.0")
 gi.require_version("PangoCairo", "1.0")
-from gi.repository import Gdk, GLib, Gtk, Pango, PangoCairo
-
 import openpyxl
+from gi.repository import Gdk, GLib, Gtk, Pango, PangoCairo
 from openpyxl.styles.colors import COLOR_INDEX
 from openpyxl.utils import get_column_letter
 
@@ -310,9 +309,7 @@ def _call_func(name, args):
     if name == "COUNTIF":
         if len(args) != 2:
             raise FormulaError("COUNTIF takes 2 args")
-        return sum(
-            1 for v in _flatten(args[0]) if _matches_criterion(v, args[1])
-        )
+        return sum(1 for v in _flatten(args[0]) if _matches_criterion(v, args[1]))
     if name == "SUMIF":
         if len(args) not in (2, 3):
             raise FormulaError("SUMIF takes 2-3 args")
@@ -485,7 +482,7 @@ def _matches_criterion(value, criterion):
         for prefix in (">=", "<=", "<>", ">", "<", "="):
             if s.startswith(prefix):
                 op = prefix
-                rest = s[len(prefix):]
+                rest = s[len(prefix) :]
                 break
         if op is not None:
             try:
@@ -550,7 +547,7 @@ class _FormulaParser:
         v = self._expr()
         self._ws()
         if self.pos < len(self.src):
-            raise FormulaError(f"trailing text: {self.src[self.pos:]!r}")
+            raise FormulaError(f"trailing text: {self.src[self.pos :]!r}")
         return v
 
     def _ws(self):
@@ -709,7 +706,9 @@ class _FormulaParser:
 
     def _number(self):
         start = self.pos
-        while self.pos < len(self.src) and (self.src[self.pos].isdigit() or self.src[self.pos] == "."):
+        while self.pos < len(self.src) and (
+            self.src[self.pos].isdigit() or self.src[self.pos] == "."
+        ):
             self.pos += 1
         if self.pos < len(self.src) and self.src[self.pos] in "eE":
             self.pos += 1
@@ -1131,12 +1130,20 @@ class SheetView(Gtk.Grid):
         vw = max(1, alloc.width)
         vh = max(1, alloc.height)
         self.hadj.configure(
-            self.hadj.get_value(), 0,
-            max(vw, self.content_width), 20, max(1, int(vw * 0.8)), vw,
+            self.hadj.get_value(),
+            0,
+            max(vw, self.content_width),
+            20,
+            max(1, int(vw * 0.8)),
+            vw,
         )
         self.vadj.configure(
-            self.vadj.get_value(), 0,
-            max(vh, self.content_height), 20, max(1, int(vh * 0.8)), vh,
+            self.vadj.get_value(),
+            0,
+            max(vh, self.content_height),
+            20,
+            max(1, int(vh * 0.8)),
+            vh,
         )
         self.scroll_x = int(self.hadj.get_value())
         self.scroll_y = int(self.vadj.get_value())
@@ -1302,7 +1309,7 @@ class SheetView(Gtk.Grid):
                     text_override_color = None
                 if text:
                     font = cell.font
-                    family = (font.name if font and font.name else "Sans")
+                    family = font.name if font and font.name else "Sans"
                     size_pt = (font.size if font and font.size else 10) * self.zoom
                     bold = bool(font and font.bold)
                     italic = bool(font and font.italic)
@@ -1316,7 +1323,9 @@ class SheetView(Gtk.Grid):
                     if italic:
                         font_desc.set_style(Pango.Style.ITALIC)
 
-                    cr.set_source_rgb(*(text_override_color or fg_rgb or COLOR_CELL_TEXT))
+                    cr.set_source_rgb(
+                        *(text_override_color or fg_rgb or COLOR_CELL_TEXT)
+                    )
                     layout = PangoCairo.create_layout(cr)
                     layout.set_font_description(font_desc)
                     layout.set_text(text, -1)
@@ -1324,10 +1333,14 @@ class SheetView(Gtk.Grid):
                     layout.set_width(avail * Pango.SCALE)
                     layout.set_ellipsize(Pango.EllipsizeMode.END)
 
-                    align_val = display_val if not (
-                        display_val is FORMULA_PENDING
-                        or isinstance(display_val, FormulaErrorValue)
-                    ) else None
+                    align_val = (
+                        display_val
+                        if not (
+                            display_val is FORMULA_PENDING
+                            or isinstance(display_val, FormulaErrorValue)
+                        )
+                        else None
+                    )
                     align = getattr(cell.alignment, "horizontal", None)
                     if align == "left":
                         pango_align = Pango.Alignment.LEFT
@@ -1518,8 +1531,10 @@ class SheetView(Gtk.Grid):
             self.scroll_x = int((self.scroll_x + event.x) * ratio - event.x)
             self.scroll_y = int((self.scroll_y + event.y) * ratio - event.y)
             self._update_adjustments()
-            self.scroll_x = max(0, min(self.scroll_x, int(self.hadj.get_upper() - self.hadj.get_page_size())))
-            self.scroll_y = max(0, min(self.scroll_y, int(self.vadj.get_upper() - self.vadj.get_page_size())))
+            max_hscroll = int(self.hadj.get_upper() - self.hadj.get_page_size())
+            max_vscroll = int(self.vadj.get_upper() - self.vadj.get_page_size())
+            self.scroll_x = max(0, min(self.scroll_x, max_hscroll))
+            self.scroll_y = max(0, min(self.scroll_y, max_vscroll))
             self.hadj.set_value(self.scroll_x)
             self.vadj.set_value(self.scroll_y)
             if self.on_zoom_changed:
@@ -1739,14 +1754,17 @@ class QuickCellApp:
         help_btn = Gtk.Button(label="❓ Help")
         help_btn.connect("clicked", lambda *_: self.show_help())
 
+        def vsep():
+            return Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
+
         hbox = Gtk.Box(spacing=6)
         hbox.pack_start(open_btn, False, False, 0)
         hbox.pack_start(copy_btn, False, False, 0)
-        hbox.pack_start(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL), False, False, 0)
+        hbox.pack_start(vsep(), False, False, 0)
         hbox.pack_start(zout_btn, False, False, 0)
         hbox.pack_start(zreset_btn, False, False, 0)
         hbox.pack_start(zin_btn, False, False, 0)
-        hbox.pack_start(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL), False, False, 0)
+        hbox.pack_start(vsep(), False, False, 0)
         hbox.pack_start(help_btn, False, False, 0)
 
         self.formula_cell_label = Gtk.Label(label="")
@@ -1762,7 +1780,7 @@ class QuickCellApp:
         self.formula_entry.set_hexpand(True)
         formula_box = Gtk.Box(spacing=4)
         formula_box.pack_start(self.formula_cell_label, False, False, 0)
-        formula_box.pack_start(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL), False, False, 0)
+        formula_box.pack_start(vsep(), False, False, 0)
         formula_box.pack_start(fx_label, False, False, 0)
         formula_box.pack_start(self.formula_entry, True, True, 0)
 
@@ -1894,9 +1912,7 @@ class QuickCellApp:
             wb = openpyxl.load_workbook(path, data_only=True, read_only=False)
             GLib.idle_add(self._set_loading_detail, "Reading formulas…")
             try:
-                wb_f = openpyxl.load_workbook(
-                    path, data_only=False, read_only=False
-                )
+                wb_f = openpyxl.load_workbook(path, data_only=False, read_only=False)
             except Exception:
                 wb_f = None
 

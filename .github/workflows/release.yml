@@ -1,0 +1,57 @@
+name: Release AppImage
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3 python3-pip python3-setuptools \
+            fakeroot patchelf strace util-linux zsync \
+            squashfs-tools desktop-file-utils \
+            libgdk-pixbuf2.0-dev librsvg2-dev
+          sudo pip install appimage-builder
+
+      - name: Determine version
+        id: ver
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            VERSION="0.0.0-${GITHUB_SHA::7}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Version: $VERSION"
+
+      - name: Build AppImage
+        env:
+          APP_VERSION: ${{ steps.ver.outputs.version }}
+        run: appimage-builder --recipe AppImageBuilder.yml --skip-test
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuickCell-AppImage-${{ steps.ver.outputs.version }}
+          path: |
+            *.AppImage
+            *.AppImage.zsync
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            *.AppImage
+            *.AppImage.zsync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

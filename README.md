@@ -23,7 +23,20 @@ A minimal read-only `.xlsx` viewer for GNOME/Linux. Built so you can peek at an 
 
 ## Installation
 
-### System packages
+### AppImage (easiest)
+
+Grab the `.AppImage` from the [latest release](https://github.com/yonie/quickcell/releases/latest), make it executable, and run it:
+
+```bash
+chmod +x QuickCell-*.AppImage
+./QuickCell-*.AppImage path/to/file.xlsx
+```
+
+No system packages or Python deps needed — everything is bundled.
+
+### Run from source
+
+If you'd rather run the script directly:
 
 ```bash
 # Fedora
@@ -34,11 +47,7 @@ sudo apt install python3-gi gir1.2-gtk-3.0 python3-cairo
 
 # Arch
 sudo pacman -S python-gobject gtk3 cairo
-```
 
-### Python deps
-
-```bash
 pip install openpyxl
 ```
 
