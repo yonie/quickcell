@@ -39,6 +39,8 @@ AppDir:
       - libffi8
       - librsvg2-common
       - adwaita-icon-theme
+      - fonts-dejavu-core
+      - fonts-noto-color-emoji
 
   files:
     exclude:
